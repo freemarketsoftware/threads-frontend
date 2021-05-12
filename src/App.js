@@ -1,10 +1,18 @@
-import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ethers } from 'ethers'
-import Greeter from './artifacts/contracts/Greeter.sol/Greeter.json'
-import Token from './artifacts/contracts/Token.sol/Token.json'
-import MyNft from './artifacts/contracts/nft.sol/MyNft.json'
 
+import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+
+
+import MyNft from './artifacts/contracts/nft.sol/MyNft.json'
+import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
+import Header from './header/Header'
+import Sidebar from './sidebar/Sidebar'
+import Feed from './feed/Feed'
+import CssBaseline from '@material-ui/core/CssBaseline';
+
+import Grid from '@material-ui/core/Grid';
 //Greeter deployed to: 0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9
 //Token deployed to: 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9
 
@@ -12,16 +20,83 @@ import MyNft from './artifacts/contracts/nft.sol/MyNft.json'
 //   MyNft deployed to: 0xa513E6E4b8f2a923D98304ec87F64353C4D5C853
 
 const myNftAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
-//0x5FbDB2315678afecb367f032d93F642f64180aa3
-function App() {
-  const [greeting, setGreetingValue] = useState()
-  const [userAccount, setUserAccount] = useState()
-  const [nftTargetAccount, setNftTargetAccount] = useState()
-  const [amount, setAmount] = useState()
 
-  async function requestAccount() {
-    await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+const lightTheme = createMuiTheme({
+  palette: {
+    type: "light"
   }
+});
+
+const darkTheme = createMuiTheme({
+  palette: {
+    type: "dark"
+  }
+});
+
+
+function App() {
+  const classes = useStyles();
+
+  const [account, setAccount] = useState()
+  const [provider, setProvider] = useState()
+  const [signer, setSigner] = useState()
+  const [connected, setConnected] = useState(false)
+
+  function requestAccount() {
+    return window.ethereum.request({ method: 'eth_requestAccounts' })
+  }
+
+
+  async function connectWallet() {
+    if (typeof window.ethereum !== 'undefined') {
+      const accounts = await requestAccount()
+      console.log(accounts)
+      setAccount(accounts[0])
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      setProvider(provider)
+      setSigner(signer)
+      setConnected(true)
+    }
+  }
+
+  async function disconnectWallet() {
+    setConnected(false)
+    setAccount(undefined)
+    setProvider(undefined)
+    setSigner(undefined)
+  }
+
+  //<Header connectWallet={connectWallet} account={account} connected={connected} disconnectWallet={disconnectWallet}/>
+
+  return (
+    <ThemeProvider theme={darkTheme}>
+     <CssBaseline>
+        <div className={classes.root}>
+          <Grid container>
+            <Grid item xs={3}></Grid>
+            <Grid item xs={7}><Feed /></Grid>
+            <Grid item xs={2}></Grid>
+          </Grid>
+        </div>
+      </CssBaseline>
+    </ThemeProvider>
+  );
+}
+
+export default App;
+
+
+
+const useStyles = makeStyles({
+  root: {
+    flexGrow: 1,
+  },
+  dark: {
+    background: "rgb(17,0,36) linear-gradient(240deg, rgba(17,0,36,1) 3%, rgba(32,56,171,1) 43%, rgba(27,5,71,0.8827906162464986) 100%)",
+  },
+});
 
   // async function fetchGreeting() {
   //   if (typeof window.ethereum !== 'undefined') {
@@ -73,34 +148,17 @@ function App() {
   //   }
   // }
 
-  async function awardNft() {
-    if (typeof window.ethereum !== 'undefined') {
-      await requestAccount()
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(myNftAddress, MyNft.abi, signer);
-      const transation = await contract.awardItem(nftTargetAccount, "mytoken.uri");
-      await transation.wait();
-      console.log(`${amount} Coins successfully sent to ${userAccount}`);
-    }
-  }
-
-
-
-  return (
-    <div className="App">
-      <header className="App-header">
-        <br />
-
-        <button onClick={awardNft}>Award Nft</button>
-        <input onChange={e => setNftTargetAccount(e.target.value)} placeholder="Account ID" />
-      </header>
-    </div>
-  );
-}
-
-export default App;
-
+  // async function connect() {
+  //   if (typeof window.ethereum !== 'undefined') {
+  //     await requestAccount()
+  //     const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //     const signer = provider.getSigner();
+  //     const contract = new ethers.Contract(myNftAddress, MyNft.abi, signer);
+  //     const transation = await contract.awardItem(nftTargetAccount, "mytoken.uri");
+  //     await transation.wait();
+  //     console.log(`${amount} Coins successfully sent to ${userAccount}`);
+  //   }
+  // }
 
 
 
