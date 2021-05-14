@@ -1,34 +1,45 @@
+import React from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid } from '@material-ui/core';
+import { Grid, List, Paper } from '@material-ui/core';
+import FeedPost from './FeedPost'
+import FeedHeader from './FeedHeader'
 
-import Thread from './Thread'
-
-const threads = [
-    {id:1, name: "Regedit", body: "Might do it", timestamp:"21:02"},
-    {id:2, name: "Goldrum", body: "Keep going", timestamp:"21:02"},
-    {id:3, name: "CrazyRabbi", body: "Time to light it up", timestamp:"21:02"},
-    {id:4, name: "CrazyRabbi", body: "Time to light it up", timestamp:"21:02"},
-    {id:5, name: "CrazyRabbi", body: "Time to light it up", timestamp:"21:02"},
-    {id:6, name: "CrazyRabbi", body: "Time to light it up", timestamp:"21:02"},
-    {id:7, name: "CrazyRabbi", body: "Time to light it up", timestamp:"21:02"},
-    {id:8, name: "CrazyRabbi", body: "Time to light it up", timestamp:"21:02"},
-    {id:9, name: "CrazyRabbi", body: "Time to light it up", timestamp:"21:02"},
-    {id:10, name: "CrazyRabbi", body: "Time to light it up", timestamp:"21:02"},
-    {id:11, name: "CrazyRabbi", body: "Time to light it up", timestamp:"21:02"},
-    {id:12, name: "CrazyRabbi", body: "Time to light it up", timestamp:"21:02"},
-    {id:13, name: "CrazyRabbi", body: "Time to light it up", timestamp:"21:02"},
-    {id:14, name: "CrazyRabbi", body: "Time to light it up", timestamp:"21:02"},
-    {id:15, name: "CrazyRabbi", body: "Time to light it up", timestamp:"21:02"},
-    {id:16, name: "CrazyRabbi", body: "Time to light it up", timestamp:"21:02"},
+const posts = [
+    {id:1,  author: "Regedit",    title:"How to solve all your problems", body: "Might do it",         timestamp:"21:02"},
+    {id:2,  author: "Goldrum",    title:"How to solve all your problems", body: "Keep going",          timestamp:"21:02"},
+    {id:3,  author: "CrazyRabbi", title:"How to solve all your problems", body: "Time to light it up", timestamp:"21:02"},
+    {id:4,  author: "CrazyRabbi", title:"How to solve all your problems", body: "Time to light it up", timestamp:"21:02"},
+    {id:5,  author: "CrazyRabbi", title:"How to solve all your problems", body: "Time to light it up", timestamp:"21:02"},
+    {id:6,  author: "CrazyRabbi", title:"How to solve all your problems", body: "Time to light it up", timestamp:"21:02"},
+    {id:7,  author: "CrazyRabbi", title:"How to solve all your problems", body: "Time to light it up", timestamp:"21:02"},
+    {id:8,  author: "CrazyRabbi", title:"How to solve all your problems", body: "Time to light it up", timestamp:"21:02"},
+    {id:9,  author: "CrazyRabbi", title:"How to solve all your problems", body: "Time to light it up", timestamp:"21:02"},
+    {id:10, author: "CrazyRabbi", title:"How to solve all your problems", body: "Time to light it up", timestamp:"21:02"},
+    {id:11, author: "CrazyRabbi", title:"How to solve all your problems", body: "Time to light it up", timestamp:"21:02"},
+    {id:12, author: "CrazyRabbi", title:"How to solve all your problems", body: "Time to light it up", timestamp:"21:02"},
+    {id:13, author: "CrazyRabbi", title:"How to solve all your problems", body: "Time to light it up", timestamp:"21:02"},
+    {id:14, author: "CrazyRabbi", title:"How to solve all your problems", body: "Time to light it up", timestamp:"21:02"},
+    {id:15, author: "CrazyRabbi", title:"How to solve all your problems", body: "Time to light it up", timestamp:"21:02"},
+    {id:16, author: "CrazyRabbi", title:"How to solve all your problems", body: "Time to light it up", timestamp:"21:02"},
   ]
 
+  const useStyles = makeStyles(theme => ({
+    list: {
+      width: "100%",
+      backgroundColor: theme.palette.background.paper
+    },
+  }));
 
 function Feed() {
+  const classes = useStyles();
 
   return (
-    <>
-      {threads.map((thread, index) => <Thread thread={thread} />)}
-    </>
+    <React.Fragment>
+      <FeedHeader></FeedHeader>
+      <List className={classes.list}>
+      {posts.map((post, index) => <FeedPost post={post} />)}
+      </List>
+    </React.Fragment>
   )
 }
 

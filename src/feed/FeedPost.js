@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import Faker from "faker";
-import { List, ListItem, Divider, ListItemText, ListItemAvatar, Avatar, Typography } from "@material-ui/core";
+import { List, ListItem, GridListTile, Divider, ListItemText, ListItemAvatar, Avatar, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -17,24 +17,23 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-function Thread({thread}) {
+function FeedPost({post}) {
   const classes = useStyles();
   return (
-      <List className={classes.root}>
-        <React.Fragment key={thread.id}>
-          <ListItem key={thread.id} alignItems="flex-start">
+        <React.Fragment key={post.id}>
+          <ListItem key={post.id} alignItems="flex-start">
             <ListItemAvatar>
               <Avatar alt="avatar" src={Faker.image.avatar()} />
             </ListItemAvatar>
-            <ListItemText primary={<Typography className={classes.fonts}>{thread.name}</Typography>} secondary={<>{thread.body}</>}/>
+            <ListItemText primary={<Typography className={classes.fonts}>{post.title}</Typography>} secondary={<>{post.body}</>}/>
           </ListItem>
           <Divider />
         </React.Fragment>
-      </List>
+
   )
 }
 
 
 
 
-export default Thread
+export default FeedPost

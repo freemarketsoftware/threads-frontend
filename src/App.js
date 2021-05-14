@@ -2,17 +2,15 @@ import { useState, useEffect } from 'react';
 import { ethers } from 'ethers'
 
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { Container, Box, CssBaseline, Grid, GridList } from '@material-ui/core';
 
 
 import MyNft from './artifacts/contracts/nft.sol/MyNft.json'
-import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
+
 import Header from './header/Header'
 import Sidebar from './sidebar/Sidebar'
 import Feed from './feed/Feed'
-import CssBaseline from '@material-ui/core/CssBaseline';
 
-import Grid from '@material-ui/core/Grid';
 //Greeter deployed to: 0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9
 //Token deployed to: 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9
 
@@ -34,14 +32,47 @@ const darkTheme = createMuiTheme({
   }
 });
 
+const useStyles = makeStyles({
+  root: {
+    flexGrow: 1,
+    overflow: 'none'
+  },
+  scrollable: {
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    maxHeight: 800
+  },
+  dark: {
+    background: "rgb(17,0,36) linear-gradient(240deg, rgba(17,0,36,1) 3%, rgba(32,56,171,1) 43%, rgba(27,5,71,0.8827906162464986) 100%)",
+  },
+});
+
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+
+  return { width, height };
+}
+
 
 function App() {
   const classes = useStyles();
+  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
 
   const [account, setAccount] = useState()
   const [provider, setProvider] = useState()
   const [signer, setSigner] = useState()
+
   const [connected, setConnected] = useState(false)
+
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions())
+    }
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {window.removeEventListener('resize', handleResize)}
+  }, [])
 
   function requestAccount() {
     return window.ethereum.request({ method: 'eth_requestAccounts' })
@@ -68,18 +99,22 @@ function App() {
     setSigner(undefined)
   }
 
+
+
   //<Header connectWallet={connectWallet} account={account} connected={connected} disconnectWallet={disconnectWallet}/>
 
   return (
     <ThemeProvider theme={darkTheme}>
      <CssBaseline>
-        <div className={classes.root}>
-          <Grid container>
+          <Grid container className={classes.root}>
             <Grid item xs={3}></Grid>
-            <Grid item xs={7}><Feed /></Grid>
+            <Grid item xs={7} className={classes.scrollable}>
+              <GridList>
+                <Feed />
+              </GridList>
+            </Grid>
             <Grid item xs={2}></Grid>
           </Grid>
-        </div>
       </CssBaseline>
     </ThemeProvider>
   );
@@ -89,14 +124,7 @@ export default App;
 
 
 
-const useStyles = makeStyles({
-  root: {
-    flexGrow: 1,
-  },
-  dark: {
-    background: "rgb(17,0,36) linear-gradient(240deg, rgba(17,0,36,1) 3%, rgba(32,56,171,1) 43%, rgba(27,5,71,0.8827906162464986) 100%)",
-  },
-});
+
 
   // async function fetchGreeting() {
   //   if (typeof window.ethereum !== 'undefined') {
